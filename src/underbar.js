@@ -57,8 +57,8 @@ var _ = { };
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
     var match;
-    _.each(array, function(element, index) {
-      if (element === target) {
+    _.each(array, function(value, index) {
+      if (value === target) {
         match = match || index;
       } 
     });
@@ -69,18 +69,23 @@ var _ = { };
   _.filter = function(collection, iterator) {
     var rslt = [];
 
-    for (var i = 0; i < collection.length; i++) {
-      if (iterator(collection[i], i, collection)) {
-        rslt.push(collection[i]);
+    _.each(collection, function(value, index, collection) {
+      if (iterator(value, index, collection)) {
+        rslt.push(value);
       }
-    }
+    });
     return rslt;
-  };
+  }; 
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
+
+    /* return _.filter(collection, function(value, index, collection)) {
+      return !iterator(value, index, collection);
+    } */
+
   };
 
   // Produce a duplicate-free version of the array.
