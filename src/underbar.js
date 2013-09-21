@@ -82,14 +82,23 @@ var _ = { };
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
 
-    /* return _.filter(collection, function(value, index, collection)) {
+    return _.filter(collection, function(value, index, collection) {
       return !iterator(value, index, collection);
-    } */
-
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var counts = {};
+    var rslt = [];
+
+    _.each(array, function(value, index, array) {
+      if (value in counts) {} else {
+        counts[value] = true;
+        rslt.push(value);
+      }
+    })
+    return rslt;
   };
 
 
