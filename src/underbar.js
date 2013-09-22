@@ -197,6 +197,17 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // Hmmm, i can't seem to figure out the clever way to re-use every().  
+    // will have to come back and try to figure it out.
+
+    iterator = iterator || function(i) { return i };
+
+    return _.reduce(collection, function(passed, item) {
+      if(passed) {
+        return true;
+      } 
+      return Boolean(iterator(item));
+    }, false)
   };
 
 
