@@ -323,6 +323,22 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
+    var j;
+    var rslt = [];
+    // Returns a random integer between min and max (from MDN: Math.random)
+    var getRandomInt = function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    rslt[0] = array[0];
+    for (var i = 1; i < array.length - 1; i++) {
+      j = getRandomInt(0, i);
+      if (i !== j) {
+        rslt[i] = rslt[j];
+      }
+      rslt[i] = array[j];
+    }
+    return rslt;
   };
 
 
