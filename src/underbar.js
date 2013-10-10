@@ -16,11 +16,7 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
-    if (n === undefined) {
-      return array[0];
-    } else {
-    return array.slice(0, n);
-    }
+      return n !== undefined ? array.slice(0, n) : array[0];
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
@@ -28,7 +24,7 @@ var _ = { };
   _.last = function(array, n) {
     if (n === undefined) {
       return array[array.length - 1];
-    } else if ( n === 0) { 
+    } else if ( n === 0) {
       return [];
     } else {
       return array.slice(-n);
@@ -43,7 +39,7 @@ var _ = { };
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
-    } else if (typeof collection === 'object') {
+    } else if (Object.prototype.toString.call(collection).slice(8, -1) === "Object") {
       for (key in collection) {
         iterator(collection[key], key, collection);
       }
@@ -56,13 +52,13 @@ var _ = { };
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
-    var match;
+    var match = -1;
     _.each(array, function(value, index) {
-      if (value === target) {
-        match = match || index;
-      } 
+      if (match === -1 && value === target) {
+        match = index;
+      }
     });
-    return match || -1
+    return match;
   };
 
   // Return all elements of an array that pass a truth test.
@@ -75,7 +71,7 @@ var _ = { };
       }
     });
     return rslt;
-  }; 
+  };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
@@ -92,15 +88,14 @@ var _ = { };
     var counts = {};
     var rslt = [];
 
-    _.each(array, function(value, index, array) {
-      if (value in counts) {} else {
+    _.each(array, function(value) {
+      if (!(value in counts)) {
         counts[value] = true;
         rslt.push(value);
       }
-    })
+    });
     return rslt;
   };
-
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
@@ -111,7 +106,7 @@ var _ = { };
 
     _.each(array, function(value, index, array) {
       rslt.push(iterator(value, index, array));
-    })
+    });
     return rslt;
   };
 
@@ -141,7 +136,7 @@ var _ = { };
       } else {
         methodName.call(value, args);
       }
-    })
+    });
     return list;
   };
 
@@ -159,12 +154,12 @@ var _ = { };
   //   }, 0); // should be 6
   //
   _.reduce = function(collection, iterator, initialValue) {
-    var total = initialValue || 0;
+    var total = initialValue === undefined ? 0 : initialValue;
 
     _.each(collection, function(value) {
       total = iterator(total, value);
-    })
-    return total 
+    });
+    return total;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -172,9 +167,7 @@ var _ = { };
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
     return _.reduce(collection, function(wasFound, item) {
-      if(wasFound) {
-        return true;
-      }
+      if(wasFound) { return true; }
       return item === target;
     }, false);
   };
@@ -183,31 +176,25 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    iterator = iterator || function(i) { return i };
+    iterator = iterator || function(i) { return i; };
 
     return _.reduce(collection, function(passed, item) {
-      if(!passed) {
-        return false;
-      } 
-      return Boolean(iterator(item));
-    }, true)
+      if(!passed) { return false; }
+      return !!(iterator(item));
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    // Hmmm, i can't seem to figure out the clever way to re-use every().  
-    // will have to come back and try to figure it out.
 
-    iterator = iterator || function(i) { return i };
+    iterator = iterator || function(i) { return i; };
 
     return _.reduce(collection, function(passed, item) {
-      if(passed) {
-        return true;
-      } 
-      return Boolean(iterator(item));
-    }, false)
+      if(passed) { return true; }
+      return !!(iterator(item));
+    }, false);
   };
 
 
@@ -230,10 +217,10 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var addProp = function(value, key) { obj[key] = value; };
+
     for (var i = 1; i < arguments.length; i++) {
-      _.each(arguments[i], function(value, key) {
-        obj[key] = value;
-      });
+      _.each(arguments[i], addProp);
     }
     return obj;
   };
@@ -241,12 +228,12 @@ var _ = { };
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var addProp = function(value, key) {
+      if (!(key in obj)) { obj[key] = value; }
+    };
+
     for (var i = 1; i < arguments.length; i++) {
-      _.each(arguments[i], function(value, key) {
-        if (!(key in obj)) {
-          obj[key] = value;
-        }
-      });
+      _.each(arguments[i], addProp);
     }
     return obj;
   };
@@ -312,7 +299,7 @@ var _ = { };
   _.delay = function(func, wait) {
     var args = Array.prototype.slice.call(arguments, 2);
 
-    return setTimeout(function() { func.apply(null, args) }, wait);
+    return setTimeout(function() { func.apply(null, args); }, wait);
   };
 
 
