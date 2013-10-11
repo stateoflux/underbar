@@ -349,17 +349,17 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
-    var max = 0;
     var tmp = [];
     var rslt = [];
 
-    _.each(arguments, function(arg) {
+    var maxLength = _.reduce(arguments, function(max, arg) {
       if (arg.length > max) {
-        max = arg.length;
-      }
-    });
+        return arg.length;
+      } else { return max; }
 
-    for (var i = 0; i < max; i++) {
+    }, 0);
+
+    for (var i = 0; i < maxLength; i++) {
       tmp = [];
       for (var j = 0; j < arguments.length; j++) {
         tmp.push(arguments[j][i]);
