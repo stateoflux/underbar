@@ -35,7 +35,7 @@ var _ = { };
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
     var key;
-    if (Array.isArray(collection)) {
+    if (collection.length === +collection.length) {  // duck-typing
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
