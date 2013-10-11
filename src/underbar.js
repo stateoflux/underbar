@@ -340,6 +340,7 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -348,6 +349,24 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var max = 0;
+    var tmp = [];
+    var rslt = [];
+
+    _.each(arguments, function(arg) {
+      if (arg.length > max) {
+        max = arg.length;
+      }
+    });
+
+    for (var i = 0; i < max; i++) {
+      tmp = [];
+      for (var j = 0; j < arguments.length; j++) {
+        tmp.push(arguments[j][i]);
+      }
+      rslt.push(tmp);
+    }
+    return rslt;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -355,6 +374,16 @@ var _ = { };
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    var rslt = result === undefined ? [] : result;
+
+     _.each(nestedArray, function(item) {
+      if (Array.isArray(item)) {
+        _.flatten(item, rslt);
+      } else {
+        rslt.push(item);
+      }    
+    });
+    return rslt;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
